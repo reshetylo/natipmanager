@@ -2,9 +2,17 @@
 Small Bash script for NAT port destination management.
 In other words this is IPTABLES port destination IP Manager/Switch (for NAT table)
 
-Currently it is checking among 3 IP:Port pairs. Primary, Secondary and Failover.
-If Primary is not accessible it is checking Secondary and if it is accessible then it performs a switch in iptables
-Once Primary destination becomes available it swithches back. The the same happens with Secondary and Faiover pair.
+Currently it is checking among 3 IP:Port pairs. Primary, Secondary and Failover. Number of incoming NAT ports is not limited in script.
+
+If Primary is not accessible it is checking Secondary and if it is accessible then it performs a switch in iptables. Example:
+```
+2017-07-17 08:07:33 RUN: /sbin/iptables -t nat -D PREROUTING -p tcp -m tcp --dport 443 -j DNAT --to-destination 10.8.0.1:8082
+2017-07-17 08:07:33 RUN: /sbin/iptables -t nat -A PREROUTING -p tcp -m tcp --dport 443 -j DNAT --to-destination 10.8.0.2:443
+2017-07-17 08:07:33 Record:   -A PREROUTING -p tcp -m tcp --dport 443 -j DNAT --to-destination 10.8.0.1:8082
+Updated with: /sbin/iptables -t nat -A PREROUTING -p tcp -m tcp --dport 443 -j DNAT --to-destination 10.8.0.2:443
+```
+
+Once Primary destination becomes available it swithches back to Primary. The the same happens with Secondary and Failover pair.
 
 ## Requirements
 * bash 4.x
